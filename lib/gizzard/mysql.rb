@@ -8,8 +8,8 @@ module Gizzard
         v.present? ? where(column => value) : all
       end
 
-      scope :forward_matching_by, -> (column, value) { where("`#{table_name}`.`#{column}` LIKE ?", "%#{sanitize_sql_like(value)}") }
-      scope :backward_matching_by, -> (column, value) { where("`#{table_name}`.`#{column}` LIKE ?", "#{sanitize_sql_like(value)}%") }
+      scope :forward_matching_by, -> (column, value) { where("`#{table_name}`.`#{column}` LIKE ?", "#{sanitize_sql_like(value)}%") }
+      scope :backward_matching_by, -> (column, value) { where("`#{table_name}`.`#{column}` LIKE ?", "%#{sanitize_sql_like(value)}") }
       scope :partial_matching_by, -> (column, value) { where("`#{table_name}`.`#{column}` LIKE ?", "%#{sanitize_sql_like(value)}%") }
     end
 
