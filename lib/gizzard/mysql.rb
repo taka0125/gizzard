@@ -22,8 +22,12 @@ module Gizzard
         order_by_field(:id, ids)
       end
 
-      def force_index(indexes)
+      def use_index(indexes)
         from("#{table_name} USE INDEX(#{Array(indexes).join(', ')})")
+      end
+
+      def force_index(indexes)
+        from("#{table_name} FORCE INDEX(#{Array(indexes).join(', ')})")
       end
 
       def lock_in_share
