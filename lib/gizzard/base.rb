@@ -3,6 +3,15 @@ module Gizzard
     extend ActiveSupport::Concern
 
     class_methods do
+      def delete_all_by_id(batch_size: 1000)
+        ids = pluck(:id)
+        ids.sort!
+        ids.each_slice(batch_size) do |chunked_ids|
+          # unscoped入れないと既に適用されているスコープが引き継がれる
+          unscoped.all.where(id: chunked_ids).delete_all
+        end
+      end
+
       def less_than_id(id)
         less_than(:id, id)
       end
