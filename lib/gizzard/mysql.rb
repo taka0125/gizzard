@@ -3,6 +3,8 @@ module Gizzard
     extend ActiveSupport::Concern
 
     included do
+      include Base
+
       scope :filtered_by, -> (column, value) do
         v = value.respond_to?(:strip) ? value.strip : value
         v.present? ? where(column => value) : all
