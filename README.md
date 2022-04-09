@@ -1,5 +1,7 @@
 # Gizzard
 
+[![Build Status](https://github.com/taka0125/gizzard/workflows/Ruby/badge.svg?branch=main)](https://github.com/taka0125/gizzard/actions)
+
 Often use snippet for ActiveRecord.
 
 ## Installation
