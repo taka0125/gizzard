@@ -3,6 +3,14 @@ module Gizzard
     extend ActiveSupport::Concern
 
     class_methods do
+      def preload_associations(records:, associations:, scope: nil)
+        if Gem::Version.new(ActiveRecord::VERSION::STRING) >= Gem::Version.new(7)
+          ActiveRecord::Associations::Preloader.new(records: records, associations: associations, scope: scope).call
+        else
+          ActiveRecord::Associations::Preloader.new.preload(records, associations, scope)
+        end
+      end
+
       def delete_all_by_id(batch_size: 1000)
         ids = pluck(:id)
         ids.sort!

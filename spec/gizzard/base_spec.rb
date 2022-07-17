@@ -1,4 +1,39 @@
 RSpec.describe Gizzard::Base do
+  describe '.preload_associations' do
+    subject { ApplicationRecord.preload_associations(records: items, associations: :item_details) }
+
+    let(:items) do
+      [].tap do |items|
+        items << Item.create!(id: 1, field1: 'item1')
+        items << Item.create!(id: 2, field1: 'item2')
+        items << Item.create!(id: 3, field1: 'item3')
+      end
+    end
+
+    let(:item_details) do
+      [].tap do |item_details|
+        items.each do |item|
+          ItemDetail.create!(item_id: item.id, body: "item#{item.id}_detail1")
+        end
+      end
+    end
+
+    before do
+      ApplicationRecord.transaction do
+        items
+        item_details
+      end
+    end
+
+    it do
+      subject
+
+      items.each do |item|
+        expect(item.item_details).to be_loaded
+      end
+    end
+  end
+
   describe '.delete_all_by_id' do
     before do
       ApplicationRecord.transaction do
