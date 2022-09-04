@@ -1,0 +1,88 @@
+name: Ruby
+
+on:
+  push:
+    branches:
+      - main
+
+  pull_request:
+    branches:
+      - main
+
+env:
+  RAILS_ENV: test
+  DB_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+
+      matrix:
+        ruby:
+          - 2.6
+          - 2.7
+          - 3.0
+          - 3.1
+        gemfile:
+          - activerecord52
+          - activerecord61
+          - activerecord70
+        exclude: # https://github.com/sue445/activerecord-compatible_legacy_migration/blob/master/.github/workflows/test.yml
+          - ruby: 2.6
+            gemfile: activerecord70
+          - ruby: 3.0
+            gemfile: activerecord52
+          - ruby: 3.1
+            gemfile: activerecord52
+
+    services:
+      mysql:
+        image: mysql:5.7
+        ports:
+          - 3306:3306
+        env:
+          MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
+          MYSQL_DATABASE: ${{ env.DB_NAME }}
+        options: >-
+          --health-cmd "mysqladmin ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+
+    env:
+      BUNDLE_GEMFILE: /home/runner/work/gizzard/gizzard/gemfiles/${{ matrix.gemfile }}.gemfile
+      DB_HOST: 127.0.0.1
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby }}
+          bundler-cache: true
+
+      - name: set MySQL sql_mode
+        run: |
+          mysql --ssl-mode=DISABLE --protocol=tcp --host 127.0.0.1 --user=root --password=${{ env.DB_PASSWORD }} mysql <<SQL
+          SET GLOBAL sql_mode = 'NO_ENGINE_SUBSTITUTION';
+          SET GLOBAL character_set_server = 'utf8mb4';
+          SET GLOBAL innodb_file_per_table = 1;
+          SET GLOBAL innodb_large_prefix = ON;
+          SQL
+
+      - name: set ENV
+        run: |
+          echo "DB_PORT=${{ job.services.mysql.ports[3306] }}" >> $GITHUB_ENV
+
+      - name: Setup DB
+        run: |
+          ./scripts/setup.sh
+        continue-on-error: ${{ matrix.allow_failures == 'true' }}
+
+      - name: Run tests
+        run: bundle exec rspec
+        continue-on-error: ${{ matrix.allow_failures == 'true' }}

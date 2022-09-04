@@ -1,0 +1,11 @@
+default: &default
+  adapter: mysql2
+  pool: <%= ENV.fetch('RAILS_MAX_THREADS', 5) %>
+  host: <%= ENV.fetch('DB_HOST', '127.0.0.1') %>
+  port: <%= ENV.fetch('DB_PORT', 33306) %>
+  database: <%= ENV.fetch('DB_NAME', 'gizzard_test') %>
+  username: <%= ENV.fetch('DB_USER', 'root') %>
+  password: <%= ENV.fetch('DB_PASSWORD', '5y8m2jzTamDS6M85ateGrA6pihhyCm') %>
+
+test:
+  <<: *default

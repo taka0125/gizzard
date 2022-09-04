@@ -1,0 +1,19 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+create_table 'items', id: :bigint, unsigned: true, force: :cascade do |t|
+  t.string   "field1", limit: 255, null: false
+  t.datetime "created_at", null: false
+  t.datetime "updated_at", null: false
+
+  t.index %i[field1], name: 'key_items_1'
+end
+
+create_table 'item_details', id: :bigint, unsigned: true, force: :cascade do |t|
+  t.bigint "item_id", unsigned: true, null: false
+  t.string   "body", limit: 255, null: false
+  t.datetime "created_at", null: false
+  t.datetime "updated_at", null: false
+
+  t.index %i[item_id], name: 'key_item_details_1'
+end

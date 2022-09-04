@@ -78,7 +78,7 @@ module Gizzard
 
         c = connection
         joins <<-SQL
-        #{join} #{c.quote_table_name(join_table_name)} #{index_hint} (#{Array(indexes).join(', ')}) ON #{c.quote_table_name(table_name)}.#{c.quote_column_name(relation.association_primary_key)} = #{c.quote_table_name(join_table_name)}.#{c.quote_column_name(relation.foreign_key)}
+        #{join} #{c.quote_table_name(join_table_name)} #{index_hint}(#{Array(indexes).join(', ')}) ON #{c.quote_table_name(table_name)}.#{c.quote_column_name(relation.association_primary_key)} = #{c.quote_table_name(join_table_name)}.#{c.quote_column_name(relation.foreign_key)}
         SQL
       end
     end
