@@ -29,7 +29,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "database_cleaner-active_record"
   spec.add_development_dependency "mysql2"
   spec.add_development_dependency "psych", "~> 3.1"
-  spec.add_development_dependency "standalone_activerecord_boot_loader"
+  spec.add_development_dependency "standalone_activerecord_boot_loader", ">= 0.3"
   spec.add_development_dependency "appraisal"
   spec.add_development_dependency "bundler"
   spec.add_development_dependency "rake", ">= 12.3.3"
