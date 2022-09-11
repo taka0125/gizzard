@@ -21,22 +21,22 @@ jobs:
 
       matrix:
         ruby:
-          - 2.6
-          - 2.7
-          - 3.0
-          - 3.1
-        gemfile:
-          - activerecord52
-          - activerecord61
-          - activerecord70
+          - '2.6'
+          - '2.7'
+          - '3.0'
+          - '3.1'
+        activerecord:
+          - '5.2'
+          - '6.0'
+          - '6.1'
+          - '7.0'
         exclude: # https://github.com/sue445/activerecord-compatible_legacy_migration/blob/master/.github/workflows/test.yml
-          - ruby: 2.6
-            gemfile: activerecord70
-          - ruby: 3.0
-            gemfile: activerecord52
-          - ruby: 3.1
-            gemfile: activerecord52
-
+          - ruby: '2.6'
+            activerecord: '7.0'
+          - ruby: '3.0'
+            activerecord: '5.2'
+          - ruby: '3.1'
+            activerecord: '5.2'
     services:
       mysql:
         image: mysql:5.7
@@ -51,9 +51,8 @@ jobs:
           --health-timeout 5s
           --health-retries 5
 
-
     env:
-      BUNDLE_GEMFILE: /home/runner/work/gizzard/gizzard/gemfiles/${{ matrix.gemfile }}.gemfile
+      BUNDLE_GEMFILE: gemfiles/activerecord${{ matrix.activerecord }}.gemfile
       DB_HOST: 127.0.0.1
 
     steps:
