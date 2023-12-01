@@ -4,6 +4,9 @@ module Gizzard
 
     class_methods do
       def preload_associations(records:, associations:, scope: nil)
+        records = Array(records)
+        return if records.empty?
+
         if Gem::Version.new(ActiveRecord::VERSION::STRING) >= Gem::Version.new(7)
           ActiveRecord::Associations::Preloader.new(records: records, associations: associations, scope: scope).call
         else
