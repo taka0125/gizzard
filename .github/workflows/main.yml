@@ -58,7 +58,7 @@ jobs:
 
       - name: set MySQL sql_mode
         run: |
-          mysql --ssl-mode=DISABLE --protocol=tcp --host 127.0.0.1 --user=root --password=${{ env.DB_PASSWORD }} mysql <<SQL
+          mysql --ssl-mode=DISABLE --get-server-public-key --protocol=tcp --host 127.0.0.1 --user=root --password=${{ env.DB_PASSWORD }} mysql <<SQL
           SET GLOBAL sql_mode = 'NO_ENGINE_SUBSTITUTION';
           SET GLOBAL character_set_server = 'latin1';
           SET GLOBAL innodb_file_per_table = ON;
