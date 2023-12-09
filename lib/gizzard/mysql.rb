@@ -7,7 +7,7 @@ module Gizzard
 
       scope :filtered_by, -> (column, value) do
         v = value.respond_to?(:strip) ? value.strip : value
-        v.present? ? where(column => value) : all
+        v.present? ? where(column => v) : all
       end
 
       scope :forward_matching_by, -> (column, value) { where("`#{table_name}`.`#{column}` LIKE ?", "#{sanitize_sql_like(value)}%") }
@@ -64,7 +64,7 @@ module Gizzard
                when :left_outer_join
                  'LEFT OUTER JOIN'
                else
-                 raise
+                 raise "Invalid join_type = #{join_type}"
                end
 
         index_hint = case hint
@@ -73,7 +73,7 @@ module Gizzard
                      when :force
                        'FORCE INDEX'
                      else
-                       raise
+                       raise "Invalid hint = #{hint}"
                      end
 
         c = connection
