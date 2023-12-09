@@ -35,11 +35,9 @@ end
 
 ## Run Test
 
-```
-$ bundle install
-$ docker-compose up -d
-$ ./scripts/setup.sh
-$ bundle exec rspec
+```bash
+$ make setup
+$ make ruby/rspec
 ```
 
 ## Development
