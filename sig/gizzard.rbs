@@ -1,0 +1,39 @@
+# TypeProf 0.21.8
+
+# Classes
+module Gizzard
+  VERSION: String
+
+  module Base
+    module ClassMethods
+      def preload_associations: (records: untyped, associations: untyped, ?scope: nil) -> nil
+      def delete_all_by_id: (?batch_size: Integer) -> untyped
+      def less_than_id: (Integer id) -> ActiveRecord::Relation
+      def greater_than_id: (Integer id) -> ActiveRecord::Relation
+      def less_than: (String | Symbol key, untyped value) -> ActiveRecord::Relation
+      def less_than_equal: (String | Symbol key, untyped value) -> ActiveRecord::Relation
+      def greater_than: (String | Symbol key, untyped value) -> ActiveRecord::Relation
+      def greater_than_equal: (String | Symbol key, untyped value) -> ActiveRecord::Relation
+    end
+  end
+
+  module Mysql
+    include Base
+    extend Base::ClassMethods
+
+    module ClassMethods
+      def lock_in_share: -> ActiveRecord::Relation
+      def order_by_field: (String | Symbol column, [untyped] values) -> ActiveRecord::Relation
+      def order_by_id_field: ([untyped] ids) -> ActiveRecord::Relation
+      def use_index: (String | [String]  indexes) -> ActiveRecord::Relation
+      def force_index: (String | [String] indexes) -> ActiveRecord::Relation
+      def joins_with_use_index: (String | Symbol relation_name, String | [String] indexes) -> ActiveRecord::Relation
+      def joins_with_force_index: (String | Symbol relation_name, String | [String] indexes) -> ActiveRecord::Relation
+      def left_outer_joins_with_use_index: (String | Symbol relation_name, String | [String] indexes) -> ActiveRecord::Relation
+      def left_outer_joins_with_force_index: (String | Symbol relation_name, String | [String] indexes) -> ActiveRecord::Relation
+    end
+
+    def to_id: -> Integer
+    def lock_in_share!: -> untyped
+  end
+end
