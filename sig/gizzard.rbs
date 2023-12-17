@@ -4,7 +4,13 @@
 module Gizzard
   VERSION: String
 
+  class Error < StandardError
+  end
+
   module Base
+    extend ActiveSupport::Concern
+    extend ActiveRecord::Core::ClassMethods
+
     module ClassMethods
       def preload_associations: (records: untyped, associations: untyped, ?scope: nil) -> nil
       def delete_all_by_id: (?batch_size: Integer) -> untyped
