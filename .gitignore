@@ -16,3 +16,5 @@ Gemfile.lock
 gemfiles/*.gemfile.lock
 
 .bash_history
+
+.gem_rbs_collection
