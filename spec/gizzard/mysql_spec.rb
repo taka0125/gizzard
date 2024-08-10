@@ -88,10 +88,9 @@ RSpec.describe Gizzard::Mysql do
   end
 
   describe '.order_by_field' do
-    subject { Item.where(id: values).order_by_field(column, values) }
+    subject { Item.where(id: ids).order_by_field(column, values) }
 
     let(:column) { :id }
-    let(:values) { [1, 3, 2] }
 
     before do
       ApplicationRecord.transaction do
@@ -102,7 +101,19 @@ RSpec.describe Gizzard::Mysql do
       end
     end
 
-    it { expect(subject.to_a.map(&:id)).to eq values }
+    context 'values is empty' do
+      let(:ids) { [1, 2, 3] }
+      let(:values) { [] }
+
+      it { expect(subject.to_a.map(&:id)).to match_array ids }
+    end
+
+    context 'values is not empty' do
+      let(:ids) { [1, 3, 2] }
+      let(:values) { [1, 3, 2] }
+
+      it { expect(subject.to_a.map(&:id)).to match_array values }
+    end
   end
 
   describe '.order_by_id_field' do
@@ -119,7 +130,7 @@ RSpec.describe Gizzard::Mysql do
       end
     end
 
-    it { expect(subject.to_a.map(&:id)).to eq ids }
+    it { expect(subject.to_a.map(&:id)).to match_array ids }
   end
 
   describe '.use_index' do

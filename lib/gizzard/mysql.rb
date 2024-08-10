@@ -7,7 +7,9 @@ module Gizzard
 
       scope :filtered_by, -> (column, value) do
         v = value.respond_to?(:strip) ? value.strip : value
-        v.present? ? where(column => v) : all
+        return where(column => v) if v.present?
+
+        all
       end
 
       scope :forward_matching_by, -> (column, value) { where("`#{table_name}`.`#{column}` LIKE ?", "#{sanitize_sql_like(value)}%") }
@@ -17,7 +19,9 @@ module Gizzard
 
     class_methods do
       def order_by_field(column, values)
-        values.present? ? order(Arel.sql("field(`#{table_name}`.`#{column}`, #{values.join(',')})")) : all
+        return in_order_of(column, values) unless values.empty?
+
+        all
       end
 
       def order_by_id_field(ids)
