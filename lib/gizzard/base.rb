@@ -7,11 +7,7 @@ module Gizzard
         records = Array(records)
         return if records.empty?
 
-        if Gem::Version.new(ActiveRecord::VERSION::STRING) >= Gem::Version.new(7)
-          ActiveRecord::Associations::Preloader.new(records: records, associations: associations, scope: scope).call
-        else
-          ActiveRecord::Associations::Preloader.new.preload(records, associations, scope)
-        end
+        ActiveRecord::Associations::Preloader.new(records: records, associations: associations, scope: scope).call
       end
 
       def delete_all_by_id(batch_size: 1000)

@@ -1,6 +1,7 @@
 # Gizzard
 
-[![Build Status](https://github.com/taka0125/gizzard/workflows/Ruby/badge.svg?branch=main)](https://github.com/taka0125/gizzard/actions)
+[![Build Status](https://github.com/taka0125/gizzard/actions/workflows/main.yml/badge.svg)](https://github.com/taka0125/gizzard/actions/workflows/main.yml)
+[![Gem Version](https://badge.fury.io/rb/gizzard.svg)](https://badge.fury.io/rb/gizzard)
 
 Often use snippet for ActiveRecord.
 
