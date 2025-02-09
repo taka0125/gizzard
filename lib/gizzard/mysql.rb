@@ -12,9 +12,17 @@ module Gizzard
         all
       end
 
-      scope :forward_matching_by, -> (column, value) { where("`#{table_name}`.`#{column}` LIKE ?", "#{sanitize_sql_like(value)}%") }
-      scope :backward_matching_by, -> (column, value) { where("`#{table_name}`.`#{column}` LIKE ?", "%#{sanitize_sql_like(value)}") }
-      scope :partial_matching_by, -> (column, value) { where("`#{table_name}`.`#{column}` LIKE ?", "%#{sanitize_sql_like(value)}%") }
+      scope :forward_matching_by, -> (column, value) do
+        where(arel_table[column].matches("#{sanitize_sql_like(value)}%"))
+      end
+
+      scope :backward_matching_by, -> (column, value) do
+        where(arel_table[column].matches("%#{sanitize_sql_like(value)}"))
+      end
+
+      scope :partial_matching_by, -> (column, value) do
+        where(arel_table[column].matches("%#{sanitize_sql_like(value)}%"))
+      end
     end
 
     class_methods do
