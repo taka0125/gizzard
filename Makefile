@@ -31,7 +31,7 @@ ruby/bash: up
 	$(DOCKER_COMPOSE) exec ruby bash
 ruby/rspec: up
 	$(DOCKER_COMPOSE) exec ruby bash -c 'bundle exec rspec'
-ruby/appraisal/generate: up
+ruby/appraisal/generate: bundle/install
 	$(DOCKER_COMPOSE) exec ruby bash -c 'bundle exec appraisal generate'
 gem/release:
 	@read -p "Enter OTP code: " otp_code; \
