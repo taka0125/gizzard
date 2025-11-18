@@ -4,28 +4,31 @@ module Gizzard
 
     included do
       include Base
+    end
 
-      scope :filtered_by, -> (column, value) do
+    class_methods do
+      def filtered_by(column, value)
         v = value.respond_to?(:strip) ? value.strip : value
         return where(column => v) if v.present?
 
         all
       end
 
-      scope :forward_matching_by, -> (column, value) do
-        where(arel_table[column].matches("#{sanitize_sql_like(value)}%"))
+      def forward_matching_by(column, value, collate: nil)
+        pattern = "#{sanitize_sql_like(value)}%"
+        like_by(column, pattern, collate: collate)
       end
 
-      scope :backward_matching_by, -> (column, value) do
-        where(arel_table[column].matches("%#{sanitize_sql_like(value)}"))
+      def backward_matching_by(column, value, collate: nil)
+        pattern = "%#{sanitize_sql_like(value)}"
+        like_by(column, pattern, collate: collate)
       end
 
-      scope :partial_matching_by, -> (column, value) do
-        where(arel_table[column].matches("%#{sanitize_sql_like(value)}%"))
+      def partial_matching_by(column, value, collate: nil)
+        pattern = "%#{sanitize_sql_like(value)}%"
+        like_by(column, pattern, collate: collate)
       end
-    end
 
-    class_methods do
       def order_by_field(column, values)
         return in_order_of(column, values) unless values.empty?
 
@@ -65,6 +68,15 @@ module Gizzard
       end
 
       private
+
+      def like_by(column, sanitized_pattern, collate: nil)
+        return where(arel_table[column].matches(sanitized_pattern)) if collate.blank?
+
+        where(
+          Arel.sql("`#{arel_table.name}`.`#{arel_table[column].name}` LIKE ? COLLATE #{collate}"),
+          sanitized_pattern
+        )
+      end
 
       def joins_with_index_hint(relation_name, indexes, join_type: :inner_join, hint: :use)
         relation = reflections[relation_name.to_s]
